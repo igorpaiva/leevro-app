@@ -47,6 +47,19 @@ public class UserController {
         return new ResponseEntity<List<FavoriteBookDto>>(favoriteBooksDto, HttpStatus.OK);
     }
 
+    @GetMapping("/{userId}/ownedBooks")
+    public ResponseEntity<List<Book>> getOwnedBooksByUser(@PathVariable Long userId) {
+        User user = userService.findById(userId);
+        List<Book> books = user.getOwnedBooks();
+        return new ResponseEntity<List<Book>>(books, HttpStatus.OK);
+    }
+
+    @GetMapping("/{userId}/wishlist")
+    public ResponseEntity<List<Book>> getWishlistByUser(@PathVariable Long userId) {
+        User user = userService.findById(userId);
+        List<Book> wishlist = user.getWishlist();
+        return new ResponseEntity<List<Book>>(wishlist, HttpStatus.OK);
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<UserDto> updateUser(@RequestBody @Valid User user) {
@@ -65,6 +78,12 @@ public class UserController {
     public ResponseEntity<Book> addOwnedBookToUser(@PathVariable Long userId, @PathVariable Long bookId){
         userService.addOwnedBook(userId, bookId);
         return new ResponseEntity<Book>(HttpStatus.OK);
+    }
+
+    @PatchMapping("/{userId}/wishlist/{bookId}")
+    public ResponseEntity<?> addBookToUserWishlist(@PathVariable Long userId, @PathVariable Long bookId) {
+        userService.addBookToWishlist(userId, bookId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping

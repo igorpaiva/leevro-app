@@ -74,6 +74,17 @@ public class UserService {
         return book;
     }
 
+    @Transactional
+    public Book addBookToWishlist(Long userId, Long bookId) {
+        User user = userRepository.getOne(userId);
+        Book book = bookService.findById(bookId);
+        List<Book> userWishlist = user.getWishlist();
+        userWishlist.add(book);
+        user.setWishlist(userWishlist);
+        userRepository.save(user);
+        return book;
+    }
+
     public void deleteById(Long id) {
         userRepository.deleteById(id);
     }
