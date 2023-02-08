@@ -12,7 +12,7 @@ public class UserDto extends ModelDto{
     private String name;
     private Integer age;
     private LocalDate dateOfBirth;
-    private List<FavoriteBookDto> favoriteBooks;
+    private List<FavoriteBookDtoIdOnly> favoriteBooks;
     private List<BookDtoIdOnly> ownedBooks;
     private List<BookDtoIdOnly> booksRead;
     private List<BookDtoIdOnly> wishlist;

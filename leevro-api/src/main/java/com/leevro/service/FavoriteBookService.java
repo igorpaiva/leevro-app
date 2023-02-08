@@ -19,7 +19,7 @@ public class FavoriteBookService {
         return favoriteBookRepository.save(favoriteBook);
     }
 
-    public List<FavoriteBook> getFavoriteBooksByUserId(User user) {
+    public List<FavoriteBook> getFavoriteBooksByUser(User user) {
         return favoriteBookRepository.findFavoriteBooksByUser(user);
     }
 }

@@ -11,5 +11,5 @@ public class FavoriteBookDto{
     private LocalDate startReadingDate;
     private LocalDate finishReadingDate;
     private Float userRating;
-    private BookDtoIdOnly book;
+    private Book book;
 }

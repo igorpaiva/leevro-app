@@ -25,12 +25,10 @@ public class UserService {
     @Autowired
     FavoriteBookService favoriteBookService;
 
-//    @Transactional
     public User findById(Long id) {
         User retrievedUser = userRepository.findById(id).orElse(null);
-        retrievedUser.setFavoriteBooks(favoriteBookService.getFavoriteBooksByUserId(retrievedUser));
+        retrievedUser.setFavoriteBooks(favoriteBookService.getFavoriteBooksByUser(retrievedUser));
         return retrievedUser;
-//        return userRepository.findById(id).get();
     }
 
 
