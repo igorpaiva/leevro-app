@@ -1,12 +1,10 @@
 package com.leevro.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
@@ -15,12 +13,11 @@ public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
-
     private String nationality;
-
     private Integer age;
-
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
+    private String biography;
+    @OneToMany
+    private List<Book> books;
 }

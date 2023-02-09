@@ -26,6 +26,6 @@ public class User {
     @OneToMany
     private List<Book> ownedBooks; //maybe redundant. Favorite book could have a boolean property called "owned"
     @OneToMany
-    private List<Book> booksRead;
+    private List<Book> readBooks;
 
 }

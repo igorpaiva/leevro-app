@@ -88,9 +88,9 @@ public class UserService {
     public Book addBookReadToUser(Long userId, Long bookId) {
         User user = userRepository.getOne(userId);
         Book book = bookService.findById(bookId);
-        List<Book> booksRead = user.getBooksRead();
-        booksRead.add(book);
-        user.setBooksRead(booksRead);
+        List<Book> readBooks = user.getReadBooks();
+        readBooks.add(book);
+        user.setReadBooks(readBooks);
         userRepository.save(user);
         return book;
     }

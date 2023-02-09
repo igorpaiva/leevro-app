@@ -12,4 +12,5 @@ public class UserReviewDto {
     private String title;
     private String reviewBody;
     private Integer userRating;
+    private Integer upvotes;
 }

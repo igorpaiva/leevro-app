@@ -1,6 +1,5 @@
 package com.leevro.dto;
 
-import com.leevro.model.Book;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -14,6 +13,6 @@ public class UserDto{
     private LocalDate dateOfBirth;
     private List<FavoriteBookDtoIdOnly> favoriteBooks;
     private List<BookDtoIdOnly> ownedBooks;
-    private List<BookDtoIdOnly> booksRead;
+    private List<BookDtoIdOnly> readBookds;
     private List<BookDtoIdOnly> wishlist;
 }
