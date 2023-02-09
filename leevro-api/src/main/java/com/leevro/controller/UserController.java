@@ -86,6 +86,12 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PatchMapping("/{userId}/readBooks/{bookId}")
+    public ResponseEntity<?> addReadBookToUser(@PathVariable Long userId, @PathVariable Long bookId) {
+        userService.addBookReadToUser(userId, bookId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<UserDto> createUser(@RequestBody @Valid User user) {
         userService.save(user);

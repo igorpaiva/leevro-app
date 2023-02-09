@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Data
-public class UserDto extends ModelDto{
+public class UserDto{
     private Long id;
     private String name;
     private Integer age;

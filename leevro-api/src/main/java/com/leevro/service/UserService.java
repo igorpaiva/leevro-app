@@ -3,7 +3,6 @@ package com.leevro.service;
 import com.leevro.model.Book;
 import com.leevro.model.FavoriteBook;
 import com.leevro.model.User;
-import com.leevro.repository.BookRepository;
 import com.leevro.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -81,6 +80,17 @@ public class UserService {
         List<Book> userWishlist = user.getWishlist();
         userWishlist.add(book);
         user.setWishlist(userWishlist);
+        userRepository.save(user);
+        return book;
+    }
+
+    @Transactional
+    public Book addBookReadToUser(Long userId, Long bookId) {
+        User user = userRepository.getOne(userId);
+        Book book = bookService.findById(bookId);
+        List<Book> booksRead = user.getBooksRead();
+        booksRead.add(book);
+        user.setBooksRead(booksRead);
         userRepository.save(user);
         return book;
     }

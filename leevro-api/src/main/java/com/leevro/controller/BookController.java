@@ -16,7 +16,7 @@ public class BookController {
     BookService bookService;
 
     @GetMapping("/{id}")
-    public Book findById(Long id) {
+    public Book getBookById(@PathVariable Long id) {
         return bookService.findById(id);
     }
 
@@ -26,12 +26,12 @@ public class BookController {
     }
 
     @PostMapping
-    public Book save(@Valid @RequestBody Book book) {
+    public Book createBook(@Valid @RequestBody Book book) {
         return bookService.saveBook(book);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteById(Long id) {
+    public void deleteBookById(@PathVariable Long id) {
         bookService.deleteBookById(id);
     }
 }
