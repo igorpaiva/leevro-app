@@ -1,6 +1,7 @@
 package com.leevro.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -19,6 +20,7 @@ public class User {
     private Integer age;
     private LocalDate dateOfBirth;
     @OneToMany(fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<ReadBook> readBooks;
 
 }

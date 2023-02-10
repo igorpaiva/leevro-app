@@ -2,12 +2,14 @@ package com.leevro.service;
 
 import com.leevro.dto.ReadBookDto;
 import com.leevro.model.ReadBook;
+import com.leevro.model.User;
 import com.leevro.model.UserReview;
 import com.leevro.repository.UserReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.google.gson.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -17,6 +19,18 @@ public class UserReviewService {
 
     @Autowired
     UserReviewRepository userReviewRepository;
+
+    @Autowired
+    ReadBookService readBookService;
+
+    public List<UserReview> getAllUserReviewsByUser(User user){
+        List<UserReview> userReviews = new ArrayList<>();
+        List<ReadBook> readBooks = readBookService.getReadBooksByUser(user);
+        for(ReadBook readBook: readBooks) {
+            userReviews.add(readBook.getUserReview());
+        }
+        return userReviews;
+    }
 
     public UserReview saveUserReview(String userReviewBody) {
         UserReview userReview = new UserReview();

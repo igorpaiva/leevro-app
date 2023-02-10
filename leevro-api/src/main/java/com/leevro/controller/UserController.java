@@ -5,7 +5,10 @@ import com.leevro.dto.UserDto;
 import com.leevro.model.Book;
 import com.leevro.model.ReadBook;
 import com.leevro.model.User;
+import com.leevro.model.UserReview;
+import com.leevro.service.BookService;
 import com.leevro.service.ReadBookService;
+import com.leevro.service.UserReviewService;
 import com.leevro.service.UserService;
 import com.leevro.util.ModelMapperUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,12 @@ public class UserController {
 
     @Autowired
     ReadBookService readBookService;
+
+    @Autowired
+    UserReviewService userReviewService;
+
+    @Autowired
+    BookService bookService;
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Long id) throws Exception {
@@ -88,6 +97,28 @@ public class UserController {
         userService.save(user);
         UserDto userDto = ModelMapperUtil.mapTo(user, UserDto.class);
         return new ResponseEntity<UserDto>(userDto, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/{userId}/userReviews/{bookId}")
+    public ResponseEntity<UserReview> createReviewByUserIdAndBookId(
+            @RequestBody String body, @PathVariable Long userId, @PathVariable Long bookId){
+        User user = userService.findById(userId);
+        Book book = bookService.findById(bookId);
+        List<ReadBook> readBooks = user.getReadBooks();
+        ReadBook readBook = userReviewService.getReadBookToReviewByBookId(readBooks, bookId);
+        UserReview userReview = userReviewService.saveUserReview(body);
+        userReview.setBook(book);
+        readBook.setUserReview(userReview);
+        readBookService.save(readBook);
+        return new ResponseEntity<UserReview>(userReview, HttpStatus.CREATED);
+    }
+
+    //@TODO: verify whys this request is returning 404
+    @GetMapping("/{userId}/userReviews")
+    public ResponseEntity<List<UserReview>> getAllUserReviews(@PathVariable Long userId) {
+        User user = userService.findById(userId);
+        List<UserReview> userReviews = userReviewService.getAllUserReviewsByUser(user);
+        return new ResponseEntity<List<UserReview>>(userReviews, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

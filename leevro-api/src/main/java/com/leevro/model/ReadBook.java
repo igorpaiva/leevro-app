@@ -1,5 +1,6 @@
 package com.leevro.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
@@ -24,6 +25,7 @@ public class ReadBook {
     private UserReview userReview;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_table")
+    @JsonBackReference
     @ToString.Exclude
     private User user;
     @OneToOne
