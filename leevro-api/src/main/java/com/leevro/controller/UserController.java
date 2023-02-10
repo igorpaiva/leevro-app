@@ -1,11 +1,11 @@
 package com.leevro.controller;
 
-import com.leevro.dto.FavoriteBookDto;
+import com.leevro.dto.ReadBookDto;
 import com.leevro.dto.UserDto;
 import com.leevro.model.Book;
-import com.leevro.model.FavoriteBook;
+import com.leevro.model.ReadBook;
 import com.leevro.model.User;
-import com.leevro.service.FavoriteBookService;
+import com.leevro.service.ReadBookService;
 import com.leevro.service.UserService;
 import com.leevro.util.ModelMapperUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,38 +26,47 @@ public class UserController {
     UserService userService;
 
     @Autowired
-    FavoriteBookService favoriteBookService;
+    ReadBookService readBookService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserDto> getUserById(@PathVariable Long id) throws Exception {
         User user = userService.findById(id);
+        if(user == null) {
+            throw new Exception("User not found");
+        }
         UserDto userDto = ModelMapperUtil.mapTo(user, UserDto.class);
         return new ResponseEntity<UserDto>(userDto, HttpStatus.OK);
     }
 
-    @GetMapping("/{userId}/favoriteBooks")
-    public ResponseEntity<List<FavoriteBookDto>> getFavoriteBooksByUser(@PathVariable Long userId) {
+    @GetMapping("/{userId}/readBooks")
+    public ResponseEntity<List<ReadBookDto>> getReadBooksByUserId(@PathVariable Long userId) {
         User user = userService.findById(userId);
-        List<FavoriteBook> favoriteBooks = favoriteBookService.getFavoriteBooksByUser(user);
-        List<FavoriteBookDto> favoriteBooksDto = new ArrayList<>();
-        for (FavoriteBook favoriteBook: favoriteBooks) {
-            FavoriteBookDto favoriteBookDto = ModelMapperUtil.mapTo(favoriteBook, FavoriteBookDto.class);
-            favoriteBooksDto.add(favoriteBookDto);
+        List<ReadBook> readBooks = user.getReadBooks();
+        List<ReadBookDto> readBooksDto = new ArrayList<>();
+        for(ReadBook readBook: readBooks) {
+            readBooksDto.add(ModelMapperUtil.mapTo(readBook, ReadBookDto.class));
         }
-        return new ResponseEntity<List<FavoriteBookDto>>(favoriteBooksDto, HttpStatus.OK);
+        return new ResponseEntity<List<ReadBookDto>>(readBooksDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/{userId}/favoriteBooks")
+    public ResponseEntity<List<Book>> getFavoriteBooksByUser(@PathVariable Long userId) {
+        User user = userService.findById(userId);
+        List<Book> favoriteBooks = readBookService.getFavoriteBooksByUser(user);
+        return new ResponseEntity<List<Book>>(favoriteBooks, HttpStatus.OK);
     }
 
     @GetMapping("/{userId}/ownedBooks")
     public ResponseEntity<List<Book>> getOwnedBooksByUser(@PathVariable Long userId) {
         User user = userService.findById(userId);
-        List<Book> books = user.getOwnedBooks();
+        List<Book> books = readBookService.getOwnedBooksByUser(user);
         return new ResponseEntity<List<Book>>(books, HttpStatus.OK);
     }
 
     @GetMapping("/{userId}/wishlist")
     public ResponseEntity<List<Book>> getWishlistByUser(@PathVariable Long userId) {
         User user = userService.findById(userId);
-        List<Book> wishlist = user.getWishlist();
+        List<Book> wishlist = readBookService.getWishedBooksByUser(user);
         return new ResponseEntity<List<Book>>(wishlist, HttpStatus.OK);
     }
 
@@ -68,28 +77,10 @@ public class UserController {
         return new ResponseEntity<UserDto>(userDto, HttpStatus.CREATED);
     }
 
-    @PatchMapping("/{userId}/favoriteBooks/{bookId}")
-    public ResponseEntity<FavoriteBook> addFavoriteBookToUser(@PathVariable Long userId, @PathVariable Long bookId, @RequestBody FavoriteBook book){
-        userService.addFavoriteBook(userId, bookId, book);
-        return new ResponseEntity<FavoriteBook>(HttpStatus.OK);
-    }
-
-    @PatchMapping("/{userId}/ownedBooks/{bookId}")
-    public ResponseEntity<Book> addOwnedBookToUser(@PathVariable Long userId, @PathVariable Long bookId){
-        userService.addOwnedBook(userId, bookId);
-        return new ResponseEntity<Book>(HttpStatus.OK);
-    }
-
-    @PatchMapping("/{userId}/wishlist/{bookId}")
-    public ResponseEntity<?> addBookToUserWishlist(@PathVariable Long userId, @PathVariable Long bookId) {
-        userService.addBookToWishlist(userId, bookId);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
     @PatchMapping("/{userId}/readBooks/{bookId}")
-    public ResponseEntity<?> addReadBookToUser(@PathVariable Long userId, @PathVariable Long bookId) {
-        userService.addBookReadToUser(userId, bookId);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<ReadBook> addReadBookToUser(@PathVariable Long userId, @PathVariable Long bookId, @RequestBody ReadBook book){
+        userService.addReadBook(userId, bookId, book);
+        return new ResponseEntity<ReadBook>(HttpStatus.OK);
     }
 
     @PostMapping

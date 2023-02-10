@@ -1,7 +1,7 @@
 package com.leevro.service;
 
 import com.leevro.model.Book;
-import com.leevro.model.FavoriteBook;
+import com.leevro.model.ReadBook;
 import com.leevro.model.User;
 import com.leevro.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +22,11 @@ public class UserService {
     BookService bookService;
 
     @Autowired
-    FavoriteBookService favoriteBookService;
+    ReadBookService readBookService;
 
     public User findById(Long id) {
         User retrievedUser = userRepository.findById(id).orElse(null);
-        retrievedUser.setFavoriteBooks(favoriteBookService.getFavoriteBooksByUser(retrievedUser));
+        retrievedUser.setReadBooks(readBookService.getReadBooksByUser(retrievedUser));
         return retrievedUser;
     }
 
@@ -49,50 +49,17 @@ public class UserService {
     }
 
     @Transactional
-    public FavoriteBook addFavoriteBook(Long userId, Long bookId, FavoriteBook favoriteBook) {
+    public ReadBook addReadBook(Long userId, Long bookId, ReadBook readBook) {
         User user = userRepository.getById(userId);
         Book book = bookService.findById(bookId);
-        favoriteBook.setBook(book);
-        favoriteBook.setUser(userRepository.getOne(userId));
-        favoriteBookService.save(favoriteBook);
-        List<FavoriteBook> favoriteBooks = user.getFavoriteBooks();
-        favoriteBooks.add(favoriteBook);
-        user.setFavoriteBooks(favoriteBooks);
-        userRepository.save(user);
-        return favoriteBook;
-    }
-
-    @Transactional
-    public Book addOwnedBook(Long userId,Long bookId) {
-        User user = userRepository.getOne(userId);
-        Book book = bookService.findById(bookId);
-        List<Book> ownedBookList = user.getOwnedBooks();
-        ownedBookList.add(book);
-        user.setOwnedBooks(ownedBookList);
-        userRepository.save(user);
-        return book;
-    }
-
-    @Transactional
-    public Book addBookToWishlist(Long userId, Long bookId) {
-        User user = userRepository.getOne(userId);
-        Book book = bookService.findById(bookId);
-        List<Book> userWishlist = user.getWishlist();
-        userWishlist.add(book);
-        user.setWishlist(userWishlist);
-        userRepository.save(user);
-        return book;
-    }
-
-    @Transactional
-    public Book addBookReadToUser(Long userId, Long bookId) {
-        User user = userRepository.getOne(userId);
-        Book book = bookService.findById(bookId);
-        List<Book> readBooks = user.getReadBooks();
-        readBooks.add(book);
+        readBook.setBook(book);
+        readBook.setUser(userRepository.getOne(userId));
+        readBookService.save(readBook);
+        List<ReadBook> readBooks = user.getReadBooks();
+        readBooks.add(readBook);
         user.setReadBooks(readBooks);
         userRepository.save(user);
-        return book;
+        return readBook;
     }
 
     public void deleteById(Long id) {

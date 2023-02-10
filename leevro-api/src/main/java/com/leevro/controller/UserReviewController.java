@@ -1,35 +1,47 @@
 package com.leevro.controller;
 
 import com.leevro.model.Book;
+import com.leevro.model.ReadBook;
 import com.leevro.model.User;
 import com.leevro.model.UserReview;
 import com.leevro.service.BookService;
+import com.leevro.service.ReadBookService;
+import com.leevro.service.UserReviewService;
 import com.leevro.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-@RestController("/userReviews")
+import java.util.List;
+
+@RestController
+@RequestMapping("/api")
 public class UserReviewController {
 
     @Autowired
-    UserService userService;
+    UserReviewService userReviewService;
+
     @Autowired
     BookService bookService;
 
-    //@TODO: finish controller after favoriteBook refactor
-    @PostMapping("/book/{bookId}/user/{userId}")
-    public ResponseEntity<UserReview> createUserReview(@RequestBody String reviewBody, @PathVariable Long bookId, @PathVariable Long userId) {
-        UserReview userReview = new UserReview();
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    ReadBookService readBookService;
+
+    //@TODO: refactor the following request to prevent stack overflow (using DTOs)
+    @PostMapping("/users/{userId}/userReviews/{bookId}")
+    public ResponseEntity<UserReview> createReviewByUserIdAndBookId(
+            @RequestBody String body, @PathVariable Long userId, @PathVariable Long bookId){
         User user = userService.findById(userId);
         Book book = bookService.findById(bookId);
-        userReview.setReviewBody(reviewBody);
-        userReview.setAuthorName(user.getName());
+        List<ReadBook> readBooks = user.getReadBooks();
+        ReadBook readBook = userReviewService.getReadBookToReviewByBookId(readBooks, bookId);
+        UserReview userReview = userReviewService.saveUserReview(body);
+        readBook.setUserReview(userReview);
+        readBookService.save(readBook);
         return new ResponseEntity<UserReview>(userReview, HttpStatus.CREATED);
     }
-
 }

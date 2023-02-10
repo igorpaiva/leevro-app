@@ -18,14 +18,6 @@ public class User {
     private Integer age;
     private LocalDate dateOfBirth;
     @OneToMany(fetch = FetchType.EAGER)
-    private List<FavoriteBook> favoriteBooks;
-    @OneToMany
-    private List<UserReview> userReviews;
-    @OneToMany
-    private List<Book> wishlist;
-    @OneToMany
-    private List<Book> ownedBooks; //maybe redundant. Favorite book could have a boolean property called "owned"
-    @OneToMany
-    private List<Book> readBooks;
+    private List<ReadBook> readBooks;
 
 }
