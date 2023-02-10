@@ -1,5 +1,6 @@
 package com.leevro.service;
 
+import com.leevro.dto.ReadBookDto;
 import com.leevro.model.ReadBook;
 import com.leevro.model.UserReview;
 import com.leevro.repository.UserReviewRepository;
@@ -19,7 +20,7 @@ public class UserReviewService {
 
     public UserReview saveUserReview(String userReviewBody) {
         UserReview userReview = new UserReview();
-        JsonObject userReviewJson = JsonParser.parseString(GSON.toJson(userReviewBody)).getAsJsonObject();
+        JsonObject userReviewJson = JsonParser.parseString(userReviewBody).getAsJsonObject();
         userReview.setReviewTitle(userReviewJson.get("reviewTitle").getAsString());
         userReview.setReviewBody(userReviewJson.get("reviewBody").getAsString());
         userReview.setReviewUpvotes(userReviewJson.get("reviewUpvotes").getAsInt());

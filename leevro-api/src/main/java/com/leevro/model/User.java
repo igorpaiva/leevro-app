@@ -1,5 +1,6 @@
 package com.leevro.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,7 +18,7 @@ public class User {
     private String name;
     private Integer age;
     private LocalDate dateOfBirth;
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.LAZY)
     private List<ReadBook> readBooks;
 
 }

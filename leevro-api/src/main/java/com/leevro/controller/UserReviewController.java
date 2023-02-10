@@ -1,6 +1,5 @@
 package com.leevro.controller;
 
-import com.leevro.model.Book;
 import com.leevro.model.ReadBook;
 import com.leevro.model.User;
 import com.leevro.model.UserReview;
@@ -31,12 +30,10 @@ public class UserReviewController {
     @Autowired
     ReadBookService readBookService;
 
-    //@TODO: refactor the following request to prevent stack overflow (using DTOs)
     @PostMapping("/users/{userId}/userReviews/{bookId}")
     public ResponseEntity<UserReview> createReviewByUserIdAndBookId(
             @RequestBody String body, @PathVariable Long userId, @PathVariable Long bookId){
         User user = userService.findById(userId);
-        Book book = bookService.findById(bookId);
         List<ReadBook> readBooks = user.getReadBooks();
         ReadBook readBook = userReviewService.getReadBookToReviewByBookId(readBooks, bookId);
         UserReview userReview = userReviewService.saveUserReview(body);

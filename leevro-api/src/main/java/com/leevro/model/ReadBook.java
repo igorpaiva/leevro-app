@@ -2,6 +2,7 @@ package com.leevro.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -21,8 +22,9 @@ public class ReadBook {
     private Boolean isOwned;
     @OneToOne
     private UserReview userReview;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_table")
+    @ToString.Exclude
     private User user;
     @OneToOne
     private Book book;
