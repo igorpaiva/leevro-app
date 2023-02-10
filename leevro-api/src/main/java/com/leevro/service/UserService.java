@@ -32,7 +32,8 @@ public class UserService {
 
 
     @Transactional
-    public User save(User user) {
+    public User save(User user) throws Exception {
+        validateNickname(user.getNickname());
         LocalDate dateToday = LocalDate.now();
         user.setAge(calculateAge(user.getDateOfBirth(), dateToday));
         return userRepository.save(user);
@@ -60,6 +61,16 @@ public class UserService {
         user.setReadBooks(readBooks);
         userRepository.save(user);
         return readBook;
+    }
+
+    private void validateNickname(String nickname) throws Exception{
+        List<User> allUsers = userRepository.findAll();
+
+        for(User user: allUsers) {
+            if(nickname.equals(user.getNickname())) {
+                throw new Exception("Nickname is already taken.");
+            }
+        }
     }
 
     public void deleteById(Long id) {

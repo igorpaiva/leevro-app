@@ -1,9 +1,7 @@
 package com.leevro.service;
 
 import com.leevro.model.Book;
-import com.leevro.model.User;
 import com.leevro.repository.BookRepository;
-import com.leevro.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

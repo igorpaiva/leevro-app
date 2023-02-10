@@ -79,8 +79,15 @@ public class UserController {
         return new ResponseEntity<List<Book>>(wishlist, HttpStatus.OK);
     }
 
+    @GetMapping("/{userId}/userReviews")
+    public ResponseEntity<List<UserReview>> getAllUserReviews(@PathVariable Long userId) {
+        User user = userService.findById(userId);
+        List<UserReview> userReviews = userReviewService.getAllUserReviewsByUser(user);
+        return new ResponseEntity<List<UserReview>>(userReviews, HttpStatus.OK);
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<UserDto> updateUser(@RequestBody @Valid User user) {
+    public ResponseEntity<UserDto> updateUser(@RequestBody @Valid User user) throws Exception {
         userService.save(user);
         UserDto userDto = ModelMapperUtil.mapTo(user, UserDto.class);
         return new ResponseEntity<UserDto>(userDto, HttpStatus.CREATED);
@@ -93,7 +100,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody @Valid User user) {
+    public ResponseEntity<UserDto> createUser(@RequestBody @Valid User user) throws Exception {
         userService.save(user);
         UserDto userDto = ModelMapperUtil.mapTo(user, UserDto.class);
         return new ResponseEntity<UserDto>(userDto, HttpStatus.CREATED);
@@ -111,14 +118,6 @@ public class UserController {
         readBook.setUserReview(userReview);
         readBookService.save(readBook);
         return new ResponseEntity<UserReview>(userReview, HttpStatus.CREATED);
-    }
-
-    //@TODO: verify whys this request is returning 404
-    @GetMapping("/{userId}/userReviews")
-    public ResponseEntity<List<UserReview>> getAllUserReviews(@PathVariable Long userId) {
-        User user = userService.findById(userId);
-        List<UserReview> userReviews = userReviewService.getAllUserReviewsByUser(user);
-        return new ResponseEntity<List<UserReview>>(userReviews, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
