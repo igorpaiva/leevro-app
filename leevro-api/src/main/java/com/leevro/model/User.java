@@ -34,5 +34,6 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<ReadBook> readBooks;
-
+    @NotNull(message = "Password must not be null.")
+    private String password;
 }
