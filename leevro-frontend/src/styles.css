@@ -1,4 +1,31 @@
-/* You can add global styles to this file, and also import other style files */
+@import '../node_modules/bulma/css/bulma.css';
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+@font-face {
+    font-family: 'Nunito';
+    src: url('./assets/fonts/Nunito-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+mat-card {
+    font-family: 'Nunito', sans-serif !important;
+}
+
+button {
+    font-family: 'Nunito', sans-serif !important;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: 'Nunito', "Helvetica Neue", sans-serif;
+}
+
+.leevro-font {
+    font-family: 'Nunito', sans-serif !important;
+    font-weight: 400 !important;
+}

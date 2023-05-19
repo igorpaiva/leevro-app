@@ -1,0 +1,7 @@
+.button {
+    background-color: lightcoral;
+}
+
+.button.is-primary:hover {
+    background-color: lightcoral;
+}
