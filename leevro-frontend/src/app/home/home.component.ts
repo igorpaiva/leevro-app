@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SamePasswordValidator, noInitialAndFinalWhitespaceValidator, noWhitespaceValidator } from 'src/app/shared/custom-validators';
 import { Router } from '@angular/router';
 import { HomeService } from '../services/home.service';
 import { NotificationService } from '../services/notification.service';
+import { MatDatepicker } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-home',
@@ -13,9 +14,11 @@ import { NotificationService } from '../services/notification.service';
 export class HomeComponent implements OnInit {
 
   isLogin: boolean = false;
-  isRegistration: boolean = false;
+  isRegistration: boolean = true;
   registrationForm: FormGroup;
   submitting = false;
+  startDate = new Date(1990, 0, 1);
+  @ViewChild('picker') picker: MatDatepicker<Date>;
 
   constructor(
     private router: Router,
@@ -60,6 +63,10 @@ export class HomeComponent implements OnInit {
   onReturnClick() {
     this.isRegistration = false;
     this.isLogin = false;
+  }
+
+  openDatePicker() {
+    this.picker.open();
   }
 
   // submitRegistration() {

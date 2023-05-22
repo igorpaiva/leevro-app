@@ -9,8 +9,8 @@
                     Your favorite book app.
                 </p>
                 <div class="button-container">
-                        <button mat-stroked-button class="login-button">Login</button>
-                        <button mat-stroked-button class="register-button" (click)="onRegisterClick()">Register</button>
+                    <button mat-stroked-button class="login-button">Login</button>
+                    <button mat-stroked-button class="register-button" (click)="onRegisterClick()">Register</button>
                 </div>
                 <div class="text-padding leevro-font">Alternate login:</div>
                 <div class="google-icon"></div>
@@ -31,8 +31,9 @@
                             </div>
                             <div>
                                 <label id="dob-label" for="dateOfBirth" class="input-label">Date of Birth</label>
-                                <input type="text" class="leevro-input" formControlName="dateOfBirth" name="dateOfBirth"
-                                    id="dateOfBirth-input" placeholder="DD/MM/YYYY" />
+                                <input class="leevro-input" matInput [matDatepicker]="picker"
+                                    placeholder="Choose a date" (click)="openDatePicker()">
+                                <mat-datepicker #picker startView="multi-year" [startAt]="startDate"></mat-datepicker>
                             </div>
                             <div>
                                 <label id="password-label" for="password" class="input-label">Nickname</label>
