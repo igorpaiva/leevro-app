@@ -27,12 +27,39 @@
 }
 
 .home-card {
+    display: flex;
     justify-content: center;
     align-items: center;
     width: 20%;
     border-radius: 10%;
     min-width: 270px;
+    min-height: 270px;
     color: lightcoral;
+}
+
+.registration-card {
+    justify-content: center;
+    align-items: center;
+    width: 20%;
+    border-radius: 10%;
+    min-width: 320px;
+    min-height: 440px;
+    color: lightcoral;
+}
+
+.registration-form-container {
+    padding-top: 20px;
+}
+
+.registration-button-container {
+    display: flex !important;
+    justify-content: space-between;
+    padding: 24px 48px;
+}
+
+.return-button {
+    width: 90px !important;
+    padding-left: 20px;
 }
 
 .container {
@@ -43,7 +70,8 @@
 
 .button-container {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    width: 200px;
 }
 
 .login-button {
@@ -59,7 +87,6 @@
 }
 
 .google-icon {
-    position: relative;
     background-image: url('/assets/img/g_icon.png') !important;
     background-size: 40px 40px;
     width: 40px;
