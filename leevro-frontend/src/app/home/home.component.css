@@ -37,6 +37,16 @@
     color: lightcoral;
 }
 
+.login-card {
+    justify-content: center;
+    align-items: center;
+    width: 20%;
+    border-radius: 10%;
+    min-width: 270px;
+    min-height: 270px;
+    color: lightcoral;
+}
+
 .registration-card {
     justify-content: center;
     align-items: center;
@@ -55,6 +65,15 @@
     display: flex !important;
     justify-content: space-between;
     padding: 24px 48px;
+}
+
+.login-button-container {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 32px;
+    padding-bottom: 24px;
+    padding-right: 10px;
+    padding-left: 10px;
 }
 
 .return-button {
@@ -76,10 +95,6 @@
 
 .login-button {
     width: 90px !important;
-}
-
-.login-button-container {
-    padding-right: 10px;
 }
 
 .register-button {

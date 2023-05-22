@@ -9,11 +9,11 @@
                     Your favorite book app.
                 </p>
                 <div class="button-container">
-                    <button mat-stroked-button class="login-button">Login</button>
+                    <button mat-stroked-button class="login-button" (click)="onLoginClick()">Login</button>
                     <button mat-stroked-button class="register-button" (click)="onRegisterClick()">Register</button>
                 </div>
                 <div class="text-padding leevro-font">Alternate login:</div>
-                <div class="google-icon"></div>
+                <div class="google-icon" (click)="onGoogleLoginClick()"></div>
             </mat-card>
             <mat-card *ngIf="isRegistration" class="registration-card">
                 <div class="registration-form-container">
@@ -31,18 +31,18 @@
                             </div>
                             <div>
                                 <label id="dob-label" for="dateOfBirth" class="input-label">Date of Birth</label>
-                                <input class="leevro-input" matInput [matDatepicker]="picker"
+                                <input class="leevro-input" formControlName="dateOfBirth" matInput [matDatepicker]="picker"
                                     placeholder="Choose a date" (click)="openDatePicker()">
                                 <mat-datepicker #picker startView="multi-year" [startAt]="startDate"></mat-datepicker>
                             </div>
                             <div>
-                                <label id="password-label" for="password" class="input-label">Nickname</label>
+                                <label id="password-label" for="password" class="input-label">Password</label>
                                 <input type="text" class="leevro-input" formControlName="password" name="password"
-                                    id="password-input" placeholder="Password" />
+                                    id="password-input" placeholder="Insert a password" />
                             </div>
                             <div>
                                 <label id="passwordConfirmation-label" for="passwordConfirmation"
-                                    class="input-label">Nickname</label>
+                                    class="input-label">Confirm password</label>
                                 <input type="text" class="leevro-input" formControlName="passwordConfirmation"
                                     name="passwordConfirmation" id="passwordConfirmation-input"
                                     placeholder="Password confirmation" />
@@ -54,6 +54,24 @@
                         </div>
                     </form>
                 </div>
+            </mat-card>
+            <mat-card *ngIf="isLogin" class="login-card">
+                    <form [formGroup]="registrationForm">
+                        <label id="nickname-label" for="nickname" class="input-label">Nickname</label>
+                        <div>
+                            <input type="text" class="leevro-input" formControlName="nickname" name="nickname"
+                                id="nickname-input" placeholder="Insert your nickname" />
+                        </div>
+                        <div>
+                            <label id="password-label" for="password" class="input-label">Password</label>
+                            <input type="text" class="leevro-input" formControlName="password" name="password"
+                                id="password-input" placeholder="Password" />
+                        </div>
+                        <div class="login-button-container">
+                            <button mat-stroked-button class="register-button">Login</button>
+                            <button mat-stroked-button class="register-button" (click)="onReturnClick()">Return</button>
+                        </div>
+                    </form>
             </mat-card>
         </div>
     </div>

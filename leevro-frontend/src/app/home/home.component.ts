@@ -14,7 +14,7 @@ import { MatDatepicker } from '@angular/material/datepicker';
 export class HomeComponent implements OnInit {
 
   isLogin: boolean = false;
-  isRegistration: boolean = true;
+  isRegistration: boolean = false;
   registrationForm: FormGroup;
   submitting = false;
   startDate = new Date(1990, 0, 1);
@@ -22,7 +22,7 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private router: Router,
-    // private service: HomeService,
+    private service: HomeService,
     // private notificationService: NotificationService
   ) { }
 
@@ -33,7 +33,7 @@ export class HomeComponent implements OnInit {
   createForm() {
     this.registrationForm = new FormGroup(
       {
-        username: new FormControl(undefined, [
+        nickname: new FormControl(undefined, [
           Validators.required,
           noInitialAndFinalWhitespaceValidator(),
           Validators.maxLength(80),
@@ -45,15 +45,27 @@ export class HomeComponent implements OnInit {
           Validators.maxLength(80),
           noWhitespaceValidator()
         ]),
-        confirmationPassword: new FormControl(undefined, [
+        passwordConfirmation: new FormControl(undefined, [
           Validators.required,
           Validators.minLength(8),
           Validators.maxLength(80),
+          noWhitespaceValidator()
+        ]),
+        dateOfBirth: new FormControl(undefined, [
+          Validators.required
+        ]),
+        name: new FormControl(undefined, [
+          Validators.required,
+          Validators.maxLength(100),
           noWhitespaceValidator()
         ])
       },
       { validators: SamePasswordValidator }
     );
+  }
+
+  onLoginClick() {
+    this.isLogin = true;
   }
 
   onRegisterClick() {
@@ -63,6 +75,19 @@ export class HomeComponent implements OnInit {
   onReturnClick() {
     this.isRegistration = false;
     this.isLogin = false;
+  }
+
+  onGoogleLoginClick() {
+    this.service.loginWithGoogle().subscribe(
+      response => {
+        // Handle the response if needed
+        console.log(response);
+      },
+      error => {
+        // Handle any errors that occurred during the request
+        console.error(error);
+      }
+    );
   }
 
   openDatePicker() {
