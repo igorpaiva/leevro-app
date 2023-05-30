@@ -19,16 +19,6 @@ public class HomeController {
     @Autowired
     UserService userService;
 
-    @GetMapping("/")
-    public String home() {
-        return "Hello, Home!";
-    }
-
-    @GetMapping("/secured")
-    public String secured() {
-        return "Hello, Secured!";
-    }
-
     @PostMapping("/registration")
     public ResponseEntity<UserDtoNicknameOnly> createUser(@RequestBody @Valid UserDto userDto) throws Exception{
         User user = userService.save(ModelMapperUtil.mapTo(userDto, User.class));
