@@ -6,6 +6,14 @@ Leevro is a modern web application for book enthusiasts who want to organize, tr
 
 **🚀 Future Vision**: Leevro is evolving into a complete **social network for book lovers** where readers can connect, share recommendations, discuss their favorite books, and build reading communities together.
 
+## 📸 Screenshots
+
+### Dashboard Overview
+<div align="center">
+<img src="./assets/desktop-screen1.png" alt="Leevro Dashboard" width="800">
+<p><em>Clean and intuitive dashboard showing your reading statistics at a glance</em></p>
+</div>
+
 ## 🌟 Features Overview
 
 **Experience the complete book tracking solution** - A full-stack application designed for readers who take their library seriously.
