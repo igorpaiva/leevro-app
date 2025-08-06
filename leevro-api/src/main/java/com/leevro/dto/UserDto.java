@@ -1,5 +1,6 @@
 package com.leevro.dto;
 
+import com.leevro.model.UserRole;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -12,4 +13,5 @@ public class UserDto{
     private Integer age;
     private LocalDate dateOfBirth;
     private String password;
+    private UserRole role;
 }

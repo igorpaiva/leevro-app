@@ -36,4 +36,6 @@ public class User {
     private List<ReadBook> readBooks;
     @NotNull(message = "Password must not be null.")
     private String password;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 }

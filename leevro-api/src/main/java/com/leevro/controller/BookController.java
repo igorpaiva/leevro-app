@@ -30,6 +30,11 @@ public class BookController {
         return bookService.saveBook(book);
     }
 
+    @PostMapping("/batch")
+    public void createBooksBatch(@Valid @RequestBody List<Book> books) {
+        bookService.saveBooksList(books);
+    }
+
     @DeleteMapping("/{id}")
     public void deleteBookById(@PathVariable Long id) {
         bookService.deleteBookById(id);
