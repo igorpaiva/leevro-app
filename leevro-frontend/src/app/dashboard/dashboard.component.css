@@ -37,6 +37,7 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   margin: 0;
+  min-height: 40px;
 }
 
 .dashboard-subtitle {
@@ -46,8 +47,8 @@
 }
 
 .logout-button {
-  background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
-  color: white;
+  background: white !important;
+  color: #667eea !important;
   border: none;
   border-radius: 25px;
   padding: 12px 24px;
@@ -89,32 +90,22 @@
 .stat-icon {
   width: 60px;
   height: 60px;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 1.5rem;
+  flex-shrink: 0;
+  padding: 8px;
 }
 
 .stat-icon mat-icon {
-  font-size: 28px;
-  color: white;
-}
-
-.total-books .stat-icon {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.read-books .stat-icon {
-  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-}
-
-.favorite-books .stat-icon {
-  background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
-}
-
-.wishlist-books .stat-icon {
-  background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+  font-size: 40px !important;
+  color: #667eea;
+  line-height: 1;
+  width: auto !important;
+  height: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 .stat-content h3 {
@@ -122,6 +113,8 @@
   font-weight: 700;
   margin: 0;
   color: #333;
+  display: flex;
+  justify-content: center;
 }
 
 .stat-content p {
@@ -181,25 +174,22 @@
 .nav-icon {
   width: 80px;
   height: 80px;
-  border-radius: 50%;
   margin: 0 auto 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
-}
-
-.books-card .nav-icon {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.authors-card .nav-icon {
-  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  padding: 12px;
 }
 
 .nav-icon mat-icon {
-  font-size: 40px;
-  color: white;
+  font-size: 48px !important;
+  color: #667eea;
+  width: auto !important;
+  height: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 .nav-card:hover .nav-icon {
@@ -270,18 +260,18 @@
 }
 
 .add-book {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: white !important;
+  color: #667eea !important;
 }
 
 .add-review {
-  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-  color: white;
+  background: white !important;
+  color: #667eea !important;
 }
 
 .view-stats {
-  background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
-  color: white;
+  background: white !important;
+  color: #667eea !important;
 }
 
 .action-button:hover {
@@ -396,9 +386,4 @@
 .card-arrow mat-icon {
   font-size: 16px;
   color: #999;
-}
-
-/* New Owned Books Card */
-.owned-books .stat-icon {
-  background: linear-gradient(135deg, #9f7aea 0%, #805ad5 100%);
 }
