@@ -1,0 +1,106 @@
+<section class="authors-section">
+  <div class="authors-container">
+    <!-- Header -->
+    <div class="authors-header">
+      <div class="header-left">
+        <button mat-icon-button class="back-button" (click)="goBackToDashboard()">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <div class="title-section">
+          <h1 class="authors-title">Authors</h1>
+          <p class="authors-subtitle">Discover amazing writers</p>
+        </div>
+      </div>
+      
+      <div class="header-actions">
+        <button mat-icon-button [class.active]="viewMode === 'grid'" (click)="viewMode = 'grid'">
+          <mat-icon>grid_view</mat-icon>
+        </button>
+        <button mat-icon-button [class.active]="viewMode === 'list'" (click)="viewMode = 'list'">
+          <mat-icon>view_list</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Search -->
+    <div class="search-section">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Search authors...</mat-label>
+        <input matInput [(ngModel)]="searchTerm" (input)="onSearch()" placeholder="Name, nationality, or biography">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-section">
+      <mat-spinner></mat-spinner>
+      <p>Loading authors...</p>
+    </div>
+
+    <!-- Authors Grid View -->
+    <div *ngIf="!loading && viewMode === 'grid'" class="authors-grid">
+      <div *ngFor="let author of filteredAuthors" class="author-card" (click)="viewAuthorDetails(author)">
+        <div class="author-avatar">
+          <mat-icon>person</mat-icon>
+        </div>
+        
+        <div class="author-info">
+          <h3 class="author-name">{{author.name}}</h3>
+          <p class="author-nationality" *ngIf="author.nationality">{{author.nationality}}</p>
+          <p class="author-dates" *ngIf="author.birthDate">
+            Born {{formatBirthDate(author.birthDate)}}
+            <span class="author-age">({{getAuthorAge(author.birthDate)}} years old)</span>
+          </p>
+          <p class="author-bio">{{author.biography}}</p>
+        </div>
+        
+        <div class="author-actions">
+          <button mat-raised-button color="primary" (click)="viewAuthorBooks(author); $event.stopPropagation()">
+            <mat-icon>menu_book</mat-icon>
+            View Books
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Authors List View -->
+    <div *ngIf="!loading && viewMode === 'list'" class="authors-list">
+      <div *ngFor="let author of filteredAuthors" class="author-list-item" (click)="viewAuthorDetails(author)">
+        <div class="author-avatar-small">
+          <mat-icon>person</mat-icon>
+        </div>
+        
+        <div class="author-details">
+          <div class="author-main-info">
+            <h3 class="author-name">{{author.name}}</h3>
+            <div class="author-meta">
+              <span class="author-nationality" *ngIf="author.nationality">{{author.nationality}}</span>
+              <span class="author-dates" *ngIf="author.birthDate">
+                Born {{formatBirthDate(author.birthDate)}} ({{getAuthorAge(author.birthDate)}} years old)
+              </span>
+            </div>
+          </div>
+          
+          <p class="author-bio-list">{{author.biography}}</p>
+        </div>
+        
+        <div class="author-actions-list">
+          <button mat-raised-button color="primary" (click)="viewAuthorBooks(author); $event.stopPropagation()">
+            <mat-icon>menu_book</mat-icon>
+            View Books
+          </button>
+          <button mat-icon-button color="accent" (click)="viewAuthorDetails(author); $event.stopPropagation()">
+            <mat-icon>info</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && filteredAuthors.length === 0" class="empty-state">
+      <mat-icon class="empty-icon">person_search</mat-icon>
+      <h2>No authors found</h2>
+      <p>Try adjusting your search criteria</p>
+    </div>
+  </div>
+</section>

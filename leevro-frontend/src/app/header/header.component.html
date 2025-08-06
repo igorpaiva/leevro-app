@@ -1,41 +1,39 @@
-<nav class="navbar">
-    <div class="navbar-brand">
-        <a class="navbar-item">
-            <img src="../assets/img/logo.svg" width="100">
-        </a>
-        <div class="navbar-burger" data-target="navbarExampleTransparentExample">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-    </div>
-
-    <div id="navbarExample" class="navbar-menu">
-        <div class="navbar-start">
-            <a class="navbar-item">
-                Home
+<nav class="modern-navbar">
+    <div class="navbar-container">
+        <div class="navbar-brand">
+            <a class="brand-logo">
+                <img src="../assets/img/logo.svg" width="60" alt="Leevro Logo">
+                <span class="brand-text">leevro</span>
             </a>
-            <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link">
-                    About
+        </div>
+
+        <div class="navbar-menu">
+            <div class="navbar-nav">
+                <a class="nav-link active">
+                    <span>Home</span>
                 </a>
-                <div class="navbar-dropdown is-boxed">
-                    <a class="navbar-item">
-                        Contact
+                <div class="nav-dropdown">
+                    <a class="nav-link">
+                        <span>About</span>
+                        <mat-icon class="dropdown-icon">keyboard_arrow_down</mat-icon>
                     </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item">
+                            <mat-icon>contact_mail</mat-icon>
+                            <span>Contact</span>
+                        </a>
+                        <a class="dropdown-item">
+                            <mat-icon>info</mat-icon>
+                            <span>About Us</span>
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="navbar-end">
-            <div class="navbar-item">
-                <div class="field is-grouped">
-                    <p class="control">
-                        <a class="button is-primary">
-                            <mat-icon>menu</mat-icon>
-                        </a>
-                    </p>
-                </div>
+            <div class="navbar-actions">
+                <button class="menu-button" mat-icon-button>
+                    <mat-icon>menu</mat-icon>
+                </button>
             </div>
         </div>
     </div>

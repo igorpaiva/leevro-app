@@ -1,25 +1,45 @@
 import { Injectable } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
-  constructor(private service: ToastrService) {}
+  constructor(private snackBar: MatSnackBar) {}
 
   success(message: string) {
-    this.service.success(message, 'Success');
+    this.snackBar.open(message, 'Close', {
+      duration: 5000,
+      panelClass: ['success-snackbar'],
+      horizontalPosition: 'end',
+      verticalPosition: 'top'
+    });
   }
 
   error(message: string) {
-    this.service.error(message, 'Error');
+    this.snackBar.open(message, 'Close', {
+      duration: 8000,
+      panelClass: ['error-snackbar'],
+      horizontalPosition: 'end',
+      verticalPosition: 'top'
+    });
   }
 
   warning(message: string) {
-    this.service.warning(message, 'Warning');
+    this.snackBar.open(message, 'Close', {
+      duration: 6000,
+      panelClass: ['warning-snackbar'],
+      horizontalPosition: 'end',
+      verticalPosition: 'top'
+    });
   }
 
   warningWithTitleAndTimeout(title: string, message: string, timeout: number) {
-    this.service.warning(message, title, { timeOut: timeout });
+    this.snackBar.open(`${title}: ${message}`, 'Close', {
+      duration: timeout,
+      panelClass: ['warning-snackbar'],
+      horizontalPosition: 'end',
+      verticalPosition: 'top'
+    });
   }
 }

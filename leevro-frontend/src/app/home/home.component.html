@@ -1,78 +1,137 @@
-<section class="hero is-primary is-bold is-fullheight">
-    <div class="hero-body">
-        <div class="container has-text-centered">
-            <mat-card *ngIf="!isLogin && !isRegistration" class="home-card">
-                <p class="title leevro-font">
-                    leevro
-                </p>
-                <p class="subtitle">
-                    Your favorite book app.
-                </p>
-                <div class="button-container">
-                    <button mat-stroked-button class="login-button" (click)="onLoginClick()">Login</button>
-                    <button mat-stroked-button class="register-button" (click)="onRegisterClick()">Register</button>
-                </div>
-                <div class="text-padding leevro-font">Alternate login:</div>
-                <div class="google-icon" (click)="onGoogleLoginClick()"></div>
-            </mat-card>
-            <mat-card *ngIf="isRegistration" class="registration-card">
-                <div class="registration-form-container">
-                    <form [formGroup]="registrationForm" class="registration-card">
-                        <div>
-                            <div>
-                                <label id="nickname-label" for="nickname" class="input-label">Nickname</label>
-                                <input type="text" class="leevro-input" formControlName="nickname" name="nickname"
-                                    id="nickname-input" placeholder="Insert your nickname" />
-                            </div>
-                            <div>
-                                <label id="name-label" for="name" class="input-label">Name</label>
-                                <input type="text" class="leevro-input" formControlName="name" name="name"
-                                    id="name-input" placeholder="Insert your name" />
-                            </div>
-                            <div>
-                                <label id="dob-label" for="dateOfBirth" class="input-label">Date of Birth</label>
-                                <input class="leevro-input" formControlName="dateOfBirth" matInput [matDatepicker]="picker"
-                                    placeholder="Choose a date" (click)="openDatePicker()">
+<section class="hero-section">
+    <div class="hero-content">
+        <div class="container">
+            <div class="card-wrapper" *ngIf="!isLogin && !isRegistration">
+                <mat-card class="welcome-card">
+                    <div class="card-header">
+                        <h1 class="app-title">leevro</h1>
+                        <p class="app-subtitle">Your favorite book companion</p>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="action-buttons">
+                            <button mat-raised-button class="primary-button" (click)="onLoginClick()">
+                                <mat-icon>login</mat-icon>
+                                Login
+                            </button>
+                            <button mat-raised-button class="secondary-button" (click)="onRegisterClick()">
+                                <mat-icon>person_add</mat-icon>
+                                Register
+                            </button>
+                        </div>
+                        
+                        <div class="divider">
+                            <span>or continue with</span>
+                        </div>
+                        
+                        <button class="google-login-button" (click)="onGoogleLoginClick()">
+                            <div class="google-icon"></div>
+                            <span>Continue with Google</span>
+                        </button>
+                    </div>
+                </mat-card>
+            </div>
+
+            <div class="card-wrapper" *ngIf="isRegistration">
+                <mat-card class="form-card registration-card">
+                    <div class="card-header">
+                        <h2 class="form-title">Create Account</h2>
+                        <p class="form-subtitle">Join the reading community</p>
+                    </div>
+                    
+                    <form [formGroup]="registrationForm" class="modern-form" (ngSubmit)="submitRegistration()">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="form-field">
+                                <mat-label>Nickname</mat-label>
+                                <input matInput formControlName="nickname" placeholder="Choose a unique nickname">
+                                <mat-icon matSuffix>person</mat-icon>
+                            </mat-form-field>
+                        </div>
+                        
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="form-field">
+                                <mat-label>Full Name</mat-label>
+                                <input matInput formControlName="name" placeholder="Enter your full name">
+                                <mat-icon matSuffix>badge</mat-icon>
+                            </mat-form-field>
+                        </div>
+                        
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="form-field">
+                                <mat-label>Date of Birth</mat-label>
+                                <input matInput formControlName="dateOfBirth" [matDatepicker]="picker" placeholder="Select your birth date" readonly (click)="openDatePicker()">
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                 <mat-datepicker #picker startView="multi-year" [startAt]="startDate"></mat-datepicker>
-                            </div>
-                            <div>
-                                <label id="password-label" for="password" class="input-label">Password</label>
-                                <input type="text" class="leevro-input" formControlName="password" name="password"
-                                    id="password-input" placeholder="Insert a password" />
-                            </div>
-                            <div>
-                                <label id="passwordConfirmation-label" for="passwordConfirmation"
-                                    class="input-label">Confirm password</label>
-                                <input type="text" class="leevro-input" formControlName="passwordConfirmation"
-                                    name="passwordConfirmation" id="passwordConfirmation-input"
-                                    placeholder="Password confirmation" />
-                            </div>
+                            </mat-form-field>
                         </div>
-                        <div class="registration-button-container">
-                            <button mat-stroked-button class="register-button">Register</button>
-                            <button mat-stroked-button class="register-button" (click)="onReturnClick()">Return</button>
+                        
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="form-field">
+                                <mat-label>Password</mat-label>
+                                <input matInput type="password" formControlName="password" placeholder="Create a secure password">
+                                <mat-icon matSuffix>lock</mat-icon>
+                            </mat-form-field>
                         </div>
-                    </form>
-                </div>
-            </mat-card>
-            <mat-card *ngIf="isLogin" class="login-card">
-                    <form [formGroup]="registrationForm">
-                        <label id="nickname-label" for="nickname" class="input-label">Nickname</label>
-                        <div>
-                            <input type="text" class="leevro-input" formControlName="nickname" name="nickname"
-                                id="nickname-input" placeholder="Insert your nickname" />
+                        
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="form-field">
+                                <mat-label>Confirm Password</mat-label>
+                                <input matInput type="password" formControlName="passwordConfirmation" placeholder="Confirm your password">
+                                <mat-icon matSuffix>lock_outline</mat-icon>
+                            </mat-form-field>
                         </div>
-                        <div>
-                            <label id="password-label" for="password" class="input-label">Password</label>
-                            <input type="text" class="leevro-input" formControlName="password" name="password"
-                                id="password-input" placeholder="Password" />
-                        </div>
-                        <div class="login-button-container">
-                            <button mat-stroked-button class="register-button">Login</button>
-                            <button mat-stroked-button class="register-button" (click)="onReturnClick()">Return</button>
+                        
+                        <div class="form-actions">
+                            <button mat-raised-button class="primary-button" type="submit" [disabled]="submitting">
+                                <mat-icon>person_add</mat-icon>
+                                {{ submitting ? 'Creating...' : 'Create Account' }}
+                            </button>
+                            <button mat-stroked-button class="secondary-button" type="button" (click)="onReturnClick()" [disabled]="submitting">
+                                <mat-icon>arrow_back</mat-icon>
+                                Back
+                            </button>
                         </div>
                     </form>
-            </mat-card>
+                </mat-card>
+            </div>
+
+            <div class="card-wrapper" *ngIf="isLogin">
+                <mat-card class="form-card login-card">
+                    <div class="card-header">
+                        <h2 class="form-title">Welcome Back</h2>
+                        <p class="form-subtitle">Sign in to your account</p>
+                    </div>
+                    
+                    <form [formGroup]="loginForm" class="modern-form" (ngSubmit)="submitLogin()">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="form-field">
+                                <mat-label>Nickname</mat-label>
+                                <input matInput formControlName="nickname" placeholder="Enter your nickname">
+                                <mat-icon matSuffix>person</mat-icon>
+                            </mat-form-field>
+                        </div>
+                        
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="form-field">
+                                <mat-label>Password</mat-label>
+                                <input matInput type="password" formControlName="password" placeholder="Enter your password">
+                                <mat-icon matSuffix>lock</mat-icon>
+                            </mat-form-field>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button mat-raised-button class="primary-button" type="submit" [disabled]="submitting">
+                                <mat-icon>login</mat-icon>
+                                {{ submitting ? 'Signing In...' : 'Sign In' }}
+                            </button>
+                            <button mat-stroked-button class="secondary-button" type="button" (click)="onReturnClick()" [disabled]="submitting">
+                                <mat-icon>arrow_back</mat-icon>
+                                Back
+                            </button>
+                        </div>
+                    </form>
+                </mat-card>
+            </div>
         </div>
     </div>
 </section>

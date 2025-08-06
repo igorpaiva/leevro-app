@@ -68,7 +68,8 @@
               "browserTarget": "leevro-frontend:build:production"
             },
             "development": {
-              "browserTarget": "leevro-frontend:build:development"
+              "browserTarget": "leevro-frontend:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"

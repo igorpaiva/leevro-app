@@ -1,0 +1,123 @@
+<section class="dashboard-section">
+  <div class="dashboard-container">
+    <!-- Header -->
+    <div class="dashboard-header">
+      <div class="welcome-text">
+        <h1 class="dashboard-title">Welcome back, {{ userNickname }}!</h1>
+        <p class="dashboard-subtitle">Your reading journey continues</p>
+      </div>
+      <button mat-raised-button class="logout-button" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        Logout
+      </button>
+    </div>
+
+    <!-- Stats Cards -->
+    <div *ngIf="loading" class="loading-section">
+      <mat-spinner></mat-spinner>
+      <p>Loading your reading stats...</p>
+    </div>
+
+    <div *ngIf="!loading" class="stats-grid">
+      <mat-card class="stat-card read-books clickable" (click)="navigateToReadBooks()">
+        <div class="stat-icon">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+        <div class="stat-content">
+          <h3>{{ stats.readBooks }}</h3>
+          <p>Read Books</p>
+        </div>
+        <div class="card-arrow">
+          <mat-icon>arrow_forward_ios</mat-icon>
+        </div>
+      </mat-card>
+
+      <mat-card class="stat-card favorite-books clickable" (click)="navigateToFavorites()">
+        <div class="stat-icon">
+          <mat-icon>favorite</mat-icon>
+        </div>
+        <div class="stat-content">
+          <h3>{{ stats.favoriteBooks }}</h3>
+          <p>Favorites</p>
+        </div>
+        <div class="card-arrow">
+          <mat-icon>arrow_forward_ios</mat-icon>
+        </div>
+      </mat-card>
+
+      <mat-card class="stat-card wishlist-books clickable" (click)="navigateToWishlist()">
+        <div class="stat-icon">
+          <mat-icon>bookmark</mat-icon>
+        </div>
+        <div class="stat-content">
+          <h3>{{ stats.wishlistBooks }}</h3>
+          <p>Wishlist</p>
+        </div>
+        <div class="card-arrow">
+          <mat-icon>arrow_forward_ios</mat-icon>
+        </div>
+      </mat-card>
+
+      <mat-card class="stat-card owned-books clickable" (click)="navigateToOwnedBooks()">
+        <div class="stat-icon">
+          <mat-icon>book</mat-icon>
+        </div>
+        <div class="stat-content">
+          <h3>{{ stats.ownedBooks }}</h3>
+          <p>Owned Books</p>
+        </div>
+        <div class="card-arrow">
+          <mat-icon>arrow_forward_ios</mat-icon>
+        </div>
+      </mat-card>
+    </div>
+
+    <!-- Navigation Cards -->
+    <div class="navigation-grid">
+      <mat-card class="nav-card books-card" (click)="navigateToAllBooks()">
+        <div class="nav-card-content">
+          <div class="nav-icon">
+            <mat-icon>menu_book</mat-icon>
+          </div>
+          <h2>Books</h2>
+          <p>Explore, track, and review your favorite books</p>
+          <div class="nav-arrow">
+            <mat-icon>arrow_forward</mat-icon>
+          </div>
+        </div>
+      </mat-card>
+
+      <mat-card class="nav-card authors-card" (click)="navigateToAuthors()">
+        <div class="nav-card-content">
+          <div class="nav-icon">
+            <mat-icon>person</mat-icon>
+          </div>
+          <h2>Authors</h2>
+          <p>Discover authors and their amazing works</p>
+          <div class="nav-arrow">
+            <mat-icon>arrow_forward</mat-icon>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <h3 class="section-title">Quick Actions</h3>
+      <div class="action-buttons">
+        <button mat-raised-button class="action-button add-book">
+          <mat-icon>add</mat-icon>
+          Add New Book
+        </button>
+        <button mat-raised-button class="action-button add-review">
+          <mat-icon>rate_review</mat-icon>
+          Write Review
+        </button>
+        <button mat-raised-button class="action-button view-stats">
+          <mat-icon>analytics</mat-icon>
+          View Statistics
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

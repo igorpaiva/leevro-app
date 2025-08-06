@@ -9,20 +9,31 @@ import { HeaderComponent } from './header/header.component';
 import { MatCardModule as MatCardModule } from '@angular/material/card';
 import { MatButtonModule as MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { setAppInjector } from './core/util/app.injector';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslateService } from './core/service/translate.service';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { BooksComponent } from './books/books.component';
+import { AuthorsComponent } from './authors/authors.component';
+import { ApiInterceptor } from './core/interceptors/api.interceptor';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    HeaderComponent
+    HeaderComponent,
+    DashboardComponent,
+    BooksComponent,
+    AuthorsComponent
   ],
   imports: [
     BrowserModule,
@@ -31,6 +42,10 @@ import { TranslateService } from './core/service/translate.service';
     MatCardModule,
     MatButtonModule,
     MatIconModule,
+    MatFormFieldModule,
+    MatSnackBarModule,
+    MatProgressSpinnerModule,
+    MatSelectModule,
     FormsModule,
     ReactiveFormsModule,
     MatDatepickerModule,
@@ -39,7 +54,14 @@ import { TranslateService } from './core/service/translate.service';
     HttpClientModule,
     TranslateModule.forRoot(),
   ],
-  providers: [TranslateService],
+  providers: [
+    TranslateService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ApiInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
