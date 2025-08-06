@@ -1,0 +1,47 @@
+services:
+  db:
+    container_name: postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      PGDATA: /data/postgres
+      POSTGRES_DB: leevro-db
+    volumes:
+      - db_data:/data/postgres
+    ports:
+      - "5332:5432"
+    networks:
+      - test-network
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d postgres" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  leevro-api:
+    image: araujoigor/leevro
+    restart: always
+    build: ./
+    working_dir: /media/igor/Files/dev/leevro-app/leevro-api
+    environment:
+      TZ: America/Sao_Paulo
+      SPRING.DATASOURCE.URL: jdbc:postgresql://db:5432/leevro-db
+      SPRING.DATASOURCE.USERNAME: admin
+      SPRING.DATASOURCE.PASSWORD: admin
+    ports:
+      - '8080:8080'
+    expose:
+      - 5332
+    command: mvn spring-boot:run
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - test-network
+networks:
+  test-network:
+    driver: bridge
+volumes:
+  db_data:
