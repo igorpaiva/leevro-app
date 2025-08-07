@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { BooksService, Book, Author, ReadBook, UserReview } from '../services/books.service';
+import { BooksService, Book, Author, ReadBook, UserReview, PageableResponse } from '../services/books.service';
 import { NotificationService } from '../services/notification.service';
 
 @Component({
@@ -21,6 +21,18 @@ export class BooksComponent implements OnInit {
   viewMode = 'grid'; // 'grid' or 'list'
   currentUserId = 1; // Hardcoded for now, should come from auth service
   pageTitle = 'All Books'; // Dynamic page title
+
+  // Pagination properties
+  currentPage = 0;
+  pageSize = 10;
+  totalPages = 0;
+  totalElements = 0;
+  isLast = false;
+  isFirst = true;
+  sortDirection = 'asc';
+
+  // Image cache to avoid repeated failures
+  private failedImages = new Set<string>();
 
   statusOptions = [
     { value: 'all', label: 'All Books' },
@@ -56,10 +68,15 @@ export class BooksComponent implements OnInit {
   loadBooks(): void {
     this.loading = true;
     
-    this.booksService.getAllBooks().subscribe({
-      next: (books: Book[]) => {
-        this.books = books;
+    this.booksService.getAllBooks(this.currentPage, this.pageSize, this.sortDirection).subscribe({
+      next: (response: PageableResponse<Book>) => {
+        this.books = response.content;
         this.filteredBooks = [...this.books];
+        this.totalPages = response.totalPages;
+        this.totalElements = response.totalElements;
+        this.isLast = response.last;
+        this.isFirst = response.first;
+        this.currentPage = response.number;
         this.loading = false;
       },
       error: (error: any) => {
@@ -177,7 +194,7 @@ export class BooksComponent implements OnInit {
       const term = this.searchTerm.toLowerCase();
       filtered = filtered.filter(book => 
         book.title.toLowerCase().includes(term) ||
-        book.author.toLowerCase().includes(term) ||
+        book.authors.some(author => author.toLowerCase().includes(term)) ||
         book.isbn.includes(term)
       );
     }
@@ -188,20 +205,20 @@ export class BooksComponent implements OnInit {
       
       switch (this.filterStatus) {
         case 'read':
-          userBookIds = this.readBooks.map(rb => rb.book.id);
+          userBookIds = this.readBooks.map(rb => rb.book.id!);
           break;
         case 'favorites':
-          userBookIds = this.favoriteBooks.map(book => book.id);
+          userBookIds = this.favoriteBooks.map(book => book.id!);
           break;
         case 'owned':
-          userBookIds = this.ownedBooks.map(book => book.id);
+          userBookIds = this.ownedBooks.map(book => book.id!);
           break;
         case 'wishlist':
-          userBookIds = this.wishlistBooks.map(book => book.id);
+          userBookIds = this.wishlistBooks.map(book => book.id!);
           break;
       }
       
-      filtered = filtered.filter(book => userBookIds.includes(book.id));
+      filtered = filtered.filter(book => book.id && userBookIds.includes(book.id));
     }
 
     this.filteredBooks = filtered;
@@ -211,7 +228,8 @@ export class BooksComponent implements OnInit {
     this.viewMode = this.viewMode === 'grid' ? 'list' : 'grid';
   }
 
-  getBookStatus(bookId: number): string {
+  getBookStatus(bookId: number | undefined): string {
+    if (!bookId) return 'NOT_READ';
     const readBook = this.readBooks.find(rb => rb.book.id === bookId);
     if (readBook) {
       if (readBook.finishReadingDate) return 'READ';
@@ -223,20 +241,24 @@ export class BooksComponent implements OnInit {
     return 'NOT_READ';
   }
 
-  getBookRating(bookId: number): number {
+  getBookRating(bookId: number | undefined): number {
+    if (!bookId) return 0;
     const readBook = this.readBooks.find(rb => rb.book.id === bookId);
     return readBook?.userRating || 0;
   }
 
-  isBookFavorite(bookId: number): boolean {
+  isBookFavorite(bookId: number | undefined): boolean {
+    if (!bookId) return false;
     return this.favoriteBooks.some(book => book.id === bookId);
   }
 
-  isBookOwned(bookId: number): boolean {
+  isBookOwned(bookId: number | undefined): boolean {
+    if (!bookId) return false;
     return this.ownedBooks.some(book => book.id === bookId);
   }
 
-  isBookInWishlist(bookId: number): boolean {
+  isBookInWishlist(bookId: number | undefined): boolean {
+    if (!bookId) return false;
     return this.wishlistBooks.some(book => book.id === bookId);
   }
 
@@ -251,6 +273,7 @@ export class BooksComponent implements OnInit {
   }
 
   toggleFavorite(book: Book): void {
+    if (!book.id) return;
     // Implementation for toggling favorite status
     const isFavorite = this.isBookFavorite(book.id);
     const message = isFavorite ? 
@@ -260,6 +283,7 @@ export class BooksComponent implements OnInit {
   }
 
   viewBookDetails(book: Book): void {
+    if (!book.id) return;
     // Navigate to book details page (to be implemented)
     this.router.navigate(['/books', book.id]);
   }
@@ -275,5 +299,106 @@ export class BooksComponent implements OnInit {
 
   goBackToDashboard(): void {
     this.router.navigate(['/dashboard']);
+  }
+
+  // Pagination methods
+  nextPage(): void {
+    if (!this.isLast) {
+      this.currentPage++;
+      this.loadBooks();
+    }
+  }
+
+  previousPage(): void {
+    if (!this.isFirst) {
+      this.currentPage--;
+      this.loadBooks();
+    }
+  }
+
+  goToPage(page: number): void {
+    if (page >= 0 && page < this.totalPages) {
+      this.currentPage = page;
+      this.loadBooks();
+    }
+  }
+
+  changePageSize(newSize: number): void {
+    this.pageSize = newSize;
+    this.currentPage = 0; // Reset to first page
+    this.loadBooks();
+  }
+
+  toggleSortDirection(): void {
+    this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    this.currentPage = 0; // Reset to first page
+    this.loadBooks();
+  }
+
+  getPaginationArray(): number[] {
+    const pages: number[] = [];
+    const start = Math.max(0, this.currentPage - 2);
+    const end = Math.min(this.totalPages, this.currentPage + 3);
+    
+    for (let i = start; i < end; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
+
+  getEndItem(): number {
+    return Math.min((this.currentPage + 1) * this.pageSize, this.totalElements);
+  }
+
+  formatAuthors(authors: string[]): string {
+    if (!authors || authors.length === 0) return 'Unknown Author';
+    if (authors.length === 1) return authors[0];
+    if (authors.length === 2) return `${authors[0]} and ${authors[1]}`;
+    return `${authors[0]} and ${authors.length - 1} others`;
+  }
+
+  onImageError(event: any): void {
+    const imgElement = event.target as HTMLImageElement;
+    const fallbackImage = 'assets/img/book-placeholder.jpg';
+    const originalSrc = imgElement.src;
+    
+    // Prevent infinite loops by checking if we're already using the fallback
+    if (originalSrc.includes('book-placeholder.jpg')) {
+      return;
+    }
+    
+    // Add to failed images cache
+    this.failedImages.add(originalSrc);
+    
+    console.warn(`Failed to load book cover: ${originalSrc}`);
+    imgElement.src = fallbackImage;
+  }
+
+  getBookCoverUrl(book: Book): string {
+    // If no coverUrl, return fallback immediately
+    if (!book.coverUrl) {
+      return 'assets/img/book-placeholder.jpg';
+    }
+    
+    // Check if this URL has previously failed
+    if (this.failedImages.has(book.coverUrl)) {
+      return 'assets/img/book-placeholder.jpg';
+    }
+    
+    // Check if the URL looks valid
+    if (!book.coverUrl.startsWith('http')) {
+      return 'assets/img/book-placeholder.jpg';
+    }
+    
+    // Check for common Open Library issues
+    if (book.coverUrl.includes('openlibrary.org') && !book.coverUrl.includes('-L.jpg')) {
+      // Try to ensure we're using the large version
+      const isbn = book.isbn;
+      if (isbn) {
+        return `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;
+      }
+    }
+    
+    return book.coverUrl;
   }
 }

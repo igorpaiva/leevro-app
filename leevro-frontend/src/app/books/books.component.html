@@ -13,6 +13,10 @@
       </div>
       
       <div class="header-actions">
+        <button mat-icon-button (click)="toggleSortDirection()" 
+                [title]="'Sort ' + (sortDirection === 'asc' ? 'Descending' : 'Ascending')">
+          <mat-icon>{{sortDirection === 'asc' ? 'arrow_upward' : 'arrow_downward'}}</mat-icon>
+        </button>
         <button mat-icon-button [class.active]="viewMode === 'grid'" (click)="viewMode = 'grid'">
           <mat-icon>grid_view</mat-icon>
         </button>
@@ -88,14 +92,17 @@
     <div *ngIf="!loading && viewMode === 'grid'" class="books-grid">
       <div *ngFor="let book of filteredBooks" class="book-card" (click)="viewBookDetails(book)">
         <div class="book-cover">
-          <img [src]="book.coverImage" [alt]="book.title" onerror="this.src='assets/img/logo.svg'">
+          <img [src]="getBookCoverUrl(book)" 
+               [alt]="book.title" 
+               (error)="onImageError($event)"
+               loading="lazy">
           <div class="book-overlay">
             <div class="book-actions">
               <button mat-mini-fab color="primary" (click)="addToReading(book); $event.stopPropagation()">
                 <mat-icon>add</mat-icon>
               </button>
-              <button mat-mini-fab [color]="isBookFavorite(book.id) ? 'warn' : 'accent'" 
-                      (click)="toggleFavorite(book); $event.stopPropagation()">
+              <button mat-mini-fab [color]="book.id && isBookFavorite(book.id) ? 'warn' : 'accent'" 
+                      (click)="toggleFavorite(book); $event.stopPropagation()" *ngIf="book.id">
                 <mat-icon>{{isBookFavorite(book.id) ? 'favorite' : 'favorite_border'}}</mat-icon>
               </button>
             </div>
@@ -104,14 +111,14 @@
         
         <div class="book-info">
           <h3 class="book-title">{{book.title}}</h3>
-          <p class="book-author">by {{book.author}}</p>
+          <p class="book-author">by {{formatAuthors(book.authors)}}</p>
           <div class="book-meta">
             <span class="pages">{{book.numberOfPages}} pages</span>
-            <span class="status-badge" [class]="getBookStatus(book.id).toLowerCase()">
+            <span class="status-badge" [class]="getBookStatus(book.id).toLowerCase()" *ngIf="book.id">
               {{getBookStatus(book.id).replace('_', ' ')}}
             </span>
           </div>
-          <div *ngIf="getBookRating(book.id) > 0" class="book-rating">
+          <div *ngIf="book.id && getBookRating(book.id) > 0" class="book-rating">
             <mat-icon *ngFor="let star of [1,2,3,4,5]" 
                      [class.filled]="star <= getBookRating(book.id)">star</mat-icon>
           </div>
@@ -123,13 +130,16 @@
     <div *ngIf="!loading && viewMode === 'list'" class="books-list">
       <div *ngFor="let book of filteredBooks" class="book-list-item" (click)="viewBookDetails(book)">
         <div class="book-cover-small">
-          <img [src]="book.coverImage" [alt]="book.title" onerror="this.src='assets/img/logo.svg'">
+          <img [src]="getBookCoverUrl(book)" 
+               [alt]="book.title" 
+               (error)="onImageError($event)"
+               loading="lazy">
         </div>
         
         <div class="book-details">
           <div class="book-main-info">
             <h3 class="book-title">{{book.title}}</h3>
-            <p class="book-author">by {{book.author}}</p>
+            <p class="book-author">by {{formatAuthors(book.authors)}}</p>
             <p class="book-description">{{book.description}}</p>
           </div>
           
@@ -144,19 +154,19 @@
             </div>
             <div class="meta-item">
               <mat-icon>label</mat-icon>
-              <span class="status-badge" [class]="getBookStatus(book.id).toLowerCase()">
+              <span class="status-badge" [class]="getBookStatus(book.id).toLowerCase()" *ngIf="book.id">
                 {{getBookStatus(book.id).replace('_', ' ')}}
               </span>
             </div>
           </div>
           
-          <div *ngIf="getBookRating(book.id) > 0" class="book-rating">
+          <div *ngIf="book.id && getBookRating(book.id) > 0" class="book-rating">
             <mat-icon *ngFor="let star of [1,2,3,4,5]" 
                      [class.filled]="star <= getBookRating(book.id)">star</mat-icon>
           </div>
         </div>
         
-        <div class="book-actions-list">
+        <div class="book-actions-list" *ngIf="book.id">
           <button mat-icon-button color="primary" (click)="addToReading(book); $event.stopPropagation()">
             <mat-icon>add</mat-icon>
           </button>
@@ -168,6 +178,45 @@
             <mat-icon>check_circle</mat-icon>
           </button>
         </div>
+      </div>
+    </div>
+
+    <!-- Pagination Controls -->
+    <div *ngIf="!loading && totalPages > 1" class="pagination-section">
+      <div class="pagination-info">
+        <span>Showing {{(currentPage * pageSize) + 1}} to {{getEndItem()}} of {{totalElements}} books</span>
+      </div>
+      
+      <div class="pagination-controls">
+        <button mat-icon-button [disabled]="isFirst" (click)="previousPage()" class="pagination-btn">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        
+        <div class="page-numbers">
+          <button *ngFor="let page of getPaginationArray()" 
+                  mat-stroked-button 
+                  [class.active]="page === currentPage"
+                  (click)="goToPage(page)"
+                  class="page-btn">
+            {{page + 1}}
+          </button>
+        </div>
+        
+        <button mat-icon-button [disabled]="isLast" (click)="nextPage()" class="pagination-btn">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+      
+      <div class="page-size-selector">
+        <mat-form-field appearance="outline" class="page-size-field">
+          <mat-label>Items per page</mat-label>
+          <mat-select [value]="pageSize" (selectionChange)="changePageSize($event.value)">
+            <mat-option [value]="8">8</mat-option>
+            <mat-option [value]="16">16</mat-option>
+            <mat-option [value]="32">32</mat-option>
+            <mat-option [value]="64">64</mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
     </div>
 
