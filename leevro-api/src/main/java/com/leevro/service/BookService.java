@@ -3,6 +3,9 @@ package com.leevro.service;
 import com.leevro.model.Book;
 import com.leevro.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,8 +20,8 @@ public class BookService {
         return bookRepository.findById(id).orElse(null);
     }
 
-    public List<Book> findAllBooks() {
-        return bookRepository.findAll();
+    public Page<Book> findAllBooks(Pageable pageable) {
+        return bookRepository.findAll(pageable);
     }
 
     public Book saveBook(Book book) {

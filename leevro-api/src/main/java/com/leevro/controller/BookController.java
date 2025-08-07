@@ -4,6 +4,11 @@ import com.leevro.model.Book;
 import com.leevro.service.BookService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,8 +26,13 @@ public class BookController {
     }
 
     @GetMapping
-    public List<Book> getAllBooks() {
-        return bookService.findAllBooks();
+    public ResponseEntity<Page<Book>> getAllBooks(@RequestParam(defaultValue = "0") int page,
+                                                  @RequestParam(defaultValue = "16") int size,
+                                                  @RequestParam(defaultValue = "asc") String direction) {
+        Sort.Direction sortDirection = direction.equals("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "title"));
+        Page<Book> bookPage = bookService.findAllBooks(pageable);
+        return ResponseEntity.ok().body(bookPage);
     }
 
     @PostMapping
